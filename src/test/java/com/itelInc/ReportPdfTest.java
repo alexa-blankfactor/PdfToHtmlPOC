@@ -8,6 +8,6 @@ public class ReportPdfTest {
     @Test
     public void testReportPdf(){
         ConvertPDFtoHTML convertPDFtoHTML = new ConvertPDFtoHTML();
-        convertPDFtoHTML.convert("Pad.pdf");
+        convertPDFtoHTML.convert("Roof_Tile_Matching.pdf");
     }
 }
