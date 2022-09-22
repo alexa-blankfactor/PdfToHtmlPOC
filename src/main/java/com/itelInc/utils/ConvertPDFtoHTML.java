@@ -15,9 +15,6 @@ public class ConvertPDFtoHTML {
     public void convert(String fileName){
         LocaleOptions.setLocale(new Locale("en", "US"));
         Document pdfDocument = new Document(FilePath.FILE_PATH_PDF_REPORT.getFilePath() +File.separator+fileName);
-        HtmlSaveOptions htmlSaveOptions = new HtmlSaveOptions();
-        htmlSaveOptions.setSplitIntoPages(true);
-        htmlSaveOptions.setConvertMarkedContentToLayers(true);
-        pdfDocument.save(FilePath.FILE_PATH_HTM_REPORT.getFilePath()+ File.separator+ fileName.replace("pdf","html"), htmlSaveOptions);
+        pdfDocument.save(FilePath.FILE_PATH_HTM_REPORT.getFilePath()+ File.separator+ fileName.replace("pdf","html"), SaveFormat.Html);
     }
 }
