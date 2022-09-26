@@ -1,8 +1,8 @@
 package com.itelInc.constants;
 
 public enum FilePath {
-    FILE_PATH_PDF_REPORT("src/test/resources/pdfReport"),
-    FILE_PATH_HTM_REPORT("src/test/resources/htmlReport");
+    FILE_PATH_PDF_REPORT("src/test/resources/pdfReport/"),
+    FILE_PATH_HTML_REPORT("src/test/resources/htmlReport/");
 
     private String filePath;
 

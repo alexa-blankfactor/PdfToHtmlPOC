@@ -1,13 +1,23 @@
 package com.itelInc;
 
+import com.itelInc.constants.FilePath;
+import com.itelInc.hooks.Driver;
 import com.itelInc.utils.ConvertPDFtoHTML;
+import org.openqa.selenium.WebDriver;
 import org.testng.annotations.Test;
 
-public class ReportPdfTest {
+import java.io.File;
 
+public class ReportPdfTest  extends Driver{
+
+    private WebDriver driver;
     @Test
     public void testReportPdf(){
+        String pdfReportName = "CombinedRoofing_Report_Lab_Q3M7528401_09162021085746663";
         ConvertPDFtoHTML convertPDFtoHTML = new ConvertPDFtoHTML();
-        convertPDFtoHTML.convert("Roof_Tile_Matching.pdf");
+        convertPDFtoHTML.convert(pdfReportName);
+        driver = getDriver();
+        driver.get("file://"+new File(FilePath.FILE_PATH_HTML_REPORT.getFilePath()+pdfReportName+".html").getAbsoluteFile());
     }
+
 }
