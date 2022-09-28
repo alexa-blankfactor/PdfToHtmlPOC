@@ -1,6 +1,7 @@
 package com.itelInc.utils;
 
 import com.aspose.pdf.Document;
+import com.aspose.pdf.HtmlMediaType;
 import com.aspose.pdf.HtmlSaveOptions;
 import com.aspose.pdf.SaveFormat;
 import com.itelInc.constants.FilePath;
