@@ -24,8 +24,7 @@ public class ReportPdfTest  extends Driver{
         driver = getDriver();
         driver.get("file://"+new File(FilePath.FILE_PATH_HTML_REPORT.getFilePath()+pdfReportName+".html").getAbsoluteFile());
         SidingMobileReport sidingMobileReportPage= new SidingMobileReport(driver);
-        List<String> suppliers= Arrays.asList("Big Buck Lumber","Menards");
-        System.out.println(sidingMobileReportPage.findSuppliers(suppliers));
+        System.out.println(sidingMobileReportPage.isSimilarMatchAvailable());
     }
 
 }

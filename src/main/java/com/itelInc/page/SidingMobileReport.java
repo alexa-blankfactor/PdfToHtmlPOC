@@ -1,5 +1,8 @@
 package com.itelInc.page;
 
+import com.aspose.pdf.tagged.logicalstructure.elements.Element;
+import com.itelInc.constants.FilePath;
+import com.itelInc.utils.CompareImage;
 import com.itelInc.utils.FindElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -14,6 +17,8 @@ import java.util.stream.Collectors;
 public class SidingMobileReport {
     ////*[local-name()='svg']//*[local-name()='g']//*[local-name()='image']
     private WebDriver driver;
+
+    private final String MATCHING_APP_RESULT_AVAILABLE= "A similar match is available";
     @FindBy(xpath = "//span[contains(@title,'CONTROL #')]")
     private WebElement controlNumber;
     @FindBy(xpath = "//span[@title='Customer']//following-sibling::span")
@@ -62,6 +67,8 @@ public class SidingMobileReport {
     private List<WebElement> otherCandidateColorMatches;
     @FindBy(xpath = "//span[@title='Manufacturer Info']//following::span[1]")
     private List<WebElement> manufactureInfo;
+
+    private final  String htmlImages ="//*[name()='svg']//*[name()='g']//*[name()='image']";
     private String searchSuppliers ="";
 
     public SidingMobileReport(WebDriver driver) {
@@ -144,12 +151,12 @@ public class SidingMobileReport {
         return FindElement.isPresent(thickness)?thickness.getText():null;
     }
     public String getBestColorMatch(){
-        return  FindElement.isPresent(bestColorMatch)? bestColorMatch.stream().map(x->x.getText()).filter(x -> !x.isBlank()).findFirst().get():null;
+        return  FindElement.isPresent(bestColorMatch)? bestColorMatch.stream().map(WebElement::getText).filter(x -> !x.isBlank()).findFirst().get():null;
 
     }
     public String getOtherCandidateColorMatches(){
         if(FindElement.isPresent(otherCandidateColorMatches)){
-            List<String> otherColorMatches=  otherCandidateColorMatches.stream().map(x->x.getAttribute("title")).filter(x -> !x.isBlank()).distinct().collect(Collectors.toList());
+            List<String> otherColorMatches= otherCandidateColorMatches.stream().map(x -> x.getAttribute("title")).filter(x -> !x.isBlank()).distinct().toList();
             int otherColorMatchesSize= otherColorMatches.size();
             return otherColorMatches.stream().skip(otherColorMatchesSize-1).findFirst().get();
         }else {
@@ -157,7 +164,7 @@ public class SidingMobileReport {
         }
     }
     public String getManufacturerInfo(){
-        return FindElement.isPresent(manufactureInfo)? manufactureInfo.stream().map(x->x.getText()).filter(x -> !x.isBlank()).findFirst().get():null;
+        return FindElement.isPresent(manufactureInfo)? manufactureInfo.stream().map(WebElement::getText).filter(x -> !x.isBlank()).findFirst().get():null;
     }
 
     public Boolean findSuppliers(List<String> suppliers){
@@ -181,6 +188,40 @@ public class SidingMobileReport {
 
         return FindElement.isPresent(suppliersElements);
 
+    }
+
+    public Boolean isSimilarMatchAvailable(){
+        if (matchingAppResult.getText().contains(MATCHING_APP_RESULT_AVAILABLE)){
+            driver.switchTo().frame(driver.findElements(By.tagName("object")).get(0));
+            List<WebElement>elements=driver.findElements(By.xpath(htmlImages));
+            if(FindElement.isPresent(elements)){
+                List<String> imagesName= elements.stream().map(image -> image.getAttribute("xlink:href")).distinct().toList();
+                return imagesName.stream()
+                        .map(image -> new CompareImage()
+                                .compare(FilePath.FILE_PATH_TEST_IMAGE.getFilePath() + "check.png", FilePath.FILE_PATH_SIDING_MOBILE_HTML_RESOURCES.getFilePath() + image))
+                        .filter(result -> !result).toList().size() >= 1;
+
+
+            }
+        }
+        return false;
+    }
+
+    public Boolean isSimilarMatchUnavailable(){
+        if (matchingAppResult.getText().contains(MATCHING_APP_RESULT_AVAILABLE)){
+            driver.switchTo().frame(driver.findElements(By.tagName("object")).get(0));
+            List<WebElement>elements=driver.findElements(By.xpath(htmlImages));
+            if(FindElement.isPresent(elements)){
+                List<String> imagesName= elements.stream().map(image -> image.getAttribute("xlink:href")).distinct().toList();
+                return imagesName.stream()
+                        .map(image -> new CompareImage()
+                                .compare(FilePath.FILE_PATH_TEST_IMAGE.getFilePath() + "uncheck.png", FilePath.FILE_PATH_SIDING_MOBILE_HTML_RESOURCES.getFilePath() + image))
+                        .filter(result -> !result).toList().size() >= 1;
+
+
+            }
+        }
+        return false;
     }
 
 

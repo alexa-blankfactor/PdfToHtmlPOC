@@ -1,7 +1,6 @@
 package com.itelInc.utils;
 
 import com.aspose.pdf.Document;
-import com.aspose.pdf.HtmlMediaType;
 import com.aspose.pdf.HtmlSaveOptions;
 import com.aspose.pdf.SaveFormat;
 import com.itelInc.constants.FilePath;
@@ -22,6 +21,7 @@ public class ConvertPDFtoHTML {
         HtmlSaveOptions options = new HtmlSaveOptions();
         options.HtmlMarkupGenerationMode=HtmlSaveOptions.HtmlMarkupGenerationModes.WriteAllHtml;
         options.setSplitIntoPages(false);
+        options.SpecialFolderForAllImages = FilePath.FILE_PATH_HTML_REPORT.getFilePath()+ fileName +"_images";
         options.setDocumentType(SaveFormat.Html);
         pdfDocument.save(FilePath.FILE_PATH_HTML_REPORT.getFilePath()+ fileName+".html", options);
         addTittleAttribute(FilePath.FILE_PATH_HTML_REPORT.getFilePath()+ fileName+".html");
