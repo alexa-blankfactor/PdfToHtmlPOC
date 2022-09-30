@@ -1,6 +1,5 @@
 package com.itelInc.page;
 
-import com.aspose.pdf.tagged.logicalstructure.elements.Element;
 import com.itelInc.constants.FilePath;
 import com.itelInc.utils.CompareImage;
 import com.itelInc.utils.FindElement;
@@ -12,10 +11,8 @@ import org.openqa.selenium.support.PageFactory;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class SidingMobileReport {
-    ////*[local-name()='svg']//*[local-name()='g']//*[local-name()='image']
     private WebDriver driver;
 
     private final String MATCHING_APP_RESULT_AVAILABLE= "A similar match is available";
@@ -196,6 +193,7 @@ public class SidingMobileReport {
             List<WebElement>elements=driver.findElements(By.xpath(htmlImages));
             if(FindElement.isPresent(elements)){
                 List<String> imagesName= elements.stream().map(image -> image.getAttribute("xlink:href")).distinct().toList();
+                driver.switchTo().defaultContent();
                 return imagesName.stream()
                         .map(image -> new CompareImage()
                                 .compare(FilePath.FILE_PATH_TEST_IMAGE.getFilePath() + "check.png", FilePath.FILE_PATH_SIDING_MOBILE_HTML_RESOURCES.getFilePath() + image))
@@ -204,6 +202,7 @@ public class SidingMobileReport {
 
             }
         }
+        driver.switchTo().defaultContent();
         return false;
     }
 
@@ -213,6 +212,7 @@ public class SidingMobileReport {
             List<WebElement>elements=driver.findElements(By.xpath(htmlImages));
             if(FindElement.isPresent(elements)){
                 List<String> imagesName= elements.stream().map(image -> image.getAttribute("xlink:href")).distinct().toList();
+                driver.switchTo().defaultContent();
                 return imagesName.stream()
                         .map(image -> new CompareImage()
                                 .compare(FilePath.FILE_PATH_TEST_IMAGE.getFilePath() + "uncheck.png", FilePath.FILE_PATH_SIDING_MOBILE_HTML_RESOURCES.getFilePath() + image))
@@ -221,6 +221,24 @@ public class SidingMobileReport {
 
             }
         }
+        driver.switchTo().defaultContent();
+        return false;
+    }
+
+    public Boolean areTheImagesIncludedInReport(String expectedImage){
+        driver.switchTo().frame(driver.findElements(By.tagName("object")).get(1));
+        List<WebElement>elements=driver.findElements(By.xpath(htmlImages));
+        if(FindElement.isPresent(elements)){
+            List<String> imagesName= elements.stream().map(image -> image.getAttribute("xlink:href")).distinct().toList();
+            driver.switchTo().defaultContent();
+          return imagesName.stream()
+                    .map(image -> new CompareImage()
+                            .compare(FilePath.FILE_PATH_TEST_IMAGE.getFilePath() + expectedImage, FilePath.FILE_PATH_SIDING_MOBILE_HTML_RESOURCES.getFilePath() + image))
+                    .filter(result -> !result).toList().size() >= 1;
+
+
+        }
+        driver.switchTo().defaultContent();
         return false;
     }
 

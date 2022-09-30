@@ -24,7 +24,7 @@ public class ReportPdfTest  extends Driver{
         driver = getDriver();
         driver.get("file://"+new File(FilePath.FILE_PATH_HTML_REPORT.getFilePath()+pdfReportName+".html").getAbsoluteFile());
         SidingMobileReport sidingMobileReportPage= new SidingMobileReport(driver);
-        System.out.println(sidingMobileReportPage.isSimilarMatchAvailable());
+        System.out.println(sidingMobileReportPage.areTheImagesIncludedInReport("sidingMobile/noProductImageAvailable.png"));
     }
 
 }
