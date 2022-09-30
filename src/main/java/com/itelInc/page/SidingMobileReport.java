@@ -11,6 +11,7 @@ import org.openqa.selenium.support.PageFactory;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SidingMobileReport {
     private WebDriver driver;
@@ -64,6 +65,16 @@ public class SidingMobileReport {
     private List<WebElement> otherCandidateColorMatches;
     @FindBy(xpath = "//span[@title='Manufacturer Info']//following::span[1]")
     private List<WebElement> manufactureInfo;
+
+    @FindBy(xpath = "(//span[@title='Comments'])[1]//following::span")
+    private List<WebElement> matchingAppResultComments;
+    @FindBy(xpath = "(//span[@title='Comments'])[2]//following::span")
+    private List<WebElement> matchingProductsComments;
+    @FindBy(xpath = "//span[@title='Helpful Comments']//following::span")
+    private List<WebElement> match1HelpfulComments;
+    @FindBy(xpath = "//span[@title='ADDITIONAL COMMENTS']//following::span")
+    private List<WebElement> additionalComments;
+
 
     private final  String htmlImages ="//*[name()='svg']//*[name()='g']//*[name()='image']";
     private String searchSuppliers ="";
@@ -242,5 +253,23 @@ public class SidingMobileReport {
         return false;
     }
 
+    public String getMatchingAppResultComments(){
+       return matchingAppResultComments.stream().map(result->result.getText()).takeWhile(text->
+           !text.contains("MATCHING PRODUCTS")).collect(Collectors.joining()).trim();
+
+    }
+    public String getMatchingProductComments(){
+        return matchingProductsComments.stream().map(result->result.getText()).takeWhile(text->
+                !text.contains("See PERSONALIZED")).collect(Collectors.joining()).trim();
+    }
+    public String getMatching1HelpfulComments(){
+        return match1HelpfulComments.stream().map(result->result.getText()).takeWhile(text->
+                !text.contains("Matched with the ITEL Matching App")).collect(Collectors.joining()).trim();
+    }
+
+    public String getAdditionalComments(){
+        return additionalComments.stream().map(result->result.getText()).takeWhile(text->
+                !text.contains("Print Date")).collect(Collectors.joining()).trim();
+    }
 
 }
