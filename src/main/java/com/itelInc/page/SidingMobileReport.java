@@ -270,6 +270,7 @@ public class SidingMobileReport {
     public String getAdditionalComments(){
         return additionalComments.stream().map(result->result.getText()).takeWhile(text->
                 !text.contains("Print Date")).collect(Collectors.joining()).trim();
+
     }
 
 }

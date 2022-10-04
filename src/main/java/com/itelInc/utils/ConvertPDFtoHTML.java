@@ -23,6 +23,7 @@ public class ConvertPDFtoHTML {
         options.setSplitIntoPages(false);
         options.SpecialFolderForAllImages = FilePath.FILE_PATH_HTML_REPORT.getFilePath()+ fileName +"_images";
         options.setDocumentType(SaveFormat.Html);
+        options.setUseZOrder(true);
         pdfDocument.save(FilePath.FILE_PATH_HTML_REPORT.getFilePath()+ fileName+".html", options);
         addTittleAttribute(FilePath.FILE_PATH_HTML_REPORT.getFilePath()+ fileName+".html");
     }

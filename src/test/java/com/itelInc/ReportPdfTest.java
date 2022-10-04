@@ -2,6 +2,7 @@ package com.itelInc;
 
 import com.itelInc.constants.FilePath;
 import com.itelInc.hooks.Driver;
+import com.itelInc.page.AsphaltShingleMobileReport;
 import com.itelInc.page.SidingMobileReport;
 import com.itelInc.utils.ConvertPDFtoHTML;
 import org.openqa.selenium.WebDriver;
@@ -20,6 +21,8 @@ public class ReportPdfTest  extends Driver{
         driver = getDriver();
         driver.get("file://"+new File(FilePath.FILE_PATH_HTML_REPORT.getFilePath()+pdfReportName+".html").getAbsoluteFile());
         //SidingMobileReport sidingMobileReportPage= new SidingMobileReport(driver);
+        AsphaltShingleMobileReport asphaltShingleMobileReport= new AsphaltShingleMobileReport(driver);
+        System.out.println(asphaltShingleMobileReport.getAdditionalComments());
 
     }
 
