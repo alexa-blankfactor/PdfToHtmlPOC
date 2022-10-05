@@ -86,80 +86,80 @@ public class SidingMobileReport {
 
     public String getControlNumber(){
       return FindElement.isPresent(controlNumber)?Arrays.stream(controlNumber.getText()
-              .split(":")).toList().get(1).trim(): null;
+              .split(":")).toList().get(1).trim(): "";
 
     }
 
     public String getCustomer(){
-        return FindElement.isPresent(customer)?customer.getText():null;
+        return FindElement.isPresent(customer)?customer.getText():"";
     }
 
     public String getCustomerId(){
-        return FindElement.isPresent(customerId)?customerId.getText():null;
+        return FindElement.isPresent(customerId)?customerId.getText():"";
     }
 
     public String getAdjuster(){
-        return FindElement.isPresent(adjuster)?adjuster.getText():null;
+        return FindElement.isPresent(adjuster)?adjuster.getText():"";
     }
 
     public String getAdditional(){
-        return FindElement.isPresent(additional)?additional.getText():null;
+        return FindElement.isPresent(additional)?additional.getText():"";
     }
 
     public String getContact(){
-        return FindElement.isPresent(contact)?contact.getText():null;
+        return FindElement.isPresent(contact)?contact.getText():"";
     }
 
     public String getEmail(){
-        return FindElement.isPresent(email)?email.getText():null;
+        return FindElement.isPresent(email)?email.getText():"";
     }
 
     public String getFax(){
-        return FindElement.isPresent(fax)?fax.getText():null;
+        return FindElement.isPresent(fax)?fax.getText():"";
     }
 
     public String getDateInvoiced(){
-        return FindElement.isPresent(dateInvoiced)?dateInvoiced.getText():null;
+        return FindElement.isPresent(dateInvoiced)?dateInvoiced.getText():"";
     }
     public String getDateReceived(){
-        return FindElement.isPresent(dateReceived)?dateReceived.getText():null;
+        return FindElement.isPresent(dateReceived)?dateReceived.getText():"";
     }
     public String getDateInsuredName(){
-        return FindElement.isPresent(insuredName)?insuredName.getText():null;
+        return FindElement.isPresent(insuredName)?insuredName.getText():"";
     }
     public String getClaimNumber(){
-        return FindElement.isPresent(claimNumber)?claimNumber.getText():null;
+        return FindElement.isPresent(claimNumber)?claimNumber.getText():"";
     }
     public String getLossLocation(){
-        return FindElement.isPresent(lossLocation)?lossLocation.getText():null;
+        return FindElement.isPresent(lossLocation)?lossLocation.getText():"";
     }
     public String getAreaDamage(){
-        return FindElement.isPresent(areaDamaged)?areaDamaged.getText():null;
+        return FindElement.isPresent(areaDamaged)?areaDamaged.getText():"";
     }
 
     public String getLossDate(){
-        return FindElement.isPresent(lossDate)?lossDate.getText():null;
+        return FindElement.isPresent(lossDate)?lossDate.getText():"";
     }
     public String getMatchingAppResult(){
-        return FindElement.isPresent(matchingAppResult)?matchingAppResult.getText():null;
+        return FindElement.isPresent(matchingAppResult)?matchingAppResult.getText():"";
     }
     public String getMatch1(){
-        return FindElement.isPresent(match1)?match1.getText():null;
+        return FindElement.isPresent(match1)?match1.getText():"";
     }
     public String getProfile(){
-        return FindElement.isPresent(profile)?profile.getText():null;
+        return FindElement.isPresent(profile)?profile.getText():"";
     }
     public String getMaterial(){
-        return FindElement.isPresent(material)?material.getText():null;
+        return FindElement.isPresent(material)?material.getText():"";
     }
     public String getProjection(){
-        return FindElement.isPresent(projection)?projection.getText():null;
+        return FindElement.isPresent(projection)?projection.getText():"";
     }
     public String getThickness(){
-        return FindElement.isPresent(thickness)?thickness.getText():null;
+        return FindElement.isPresent(thickness)?thickness.getText():"";
     }
     public String getBestColorMatch(){
-        return  FindElement.isPresent(bestColorMatch)? bestColorMatch.stream().map(WebElement::getText).filter(x -> !x.isBlank()).findFirst().get():null;
+        return  FindElement.isPresent(bestColorMatch)? bestColorMatch.stream().map(WebElement::getText).filter(x -> !x.isBlank()).findFirst().get():"";
 
     }
     public String getOtherCandidateColorMatches(){
@@ -168,11 +168,11 @@ public class SidingMobileReport {
             int otherColorMatchesSize= otherColorMatches.size();
             return otherColorMatches.stream().skip(otherColorMatchesSize-1).findFirst().get();
         }else {
-            return null;
+            return "";
         }
     }
     public String getManufacturerInfo(){
-        return FindElement.isPresent(manufactureInfo)? manufactureInfo.stream().map(WebElement::getText).filter(x -> !x.isBlank()).findFirst().get():null;
+        return FindElement.isPresent(manufactureInfo)? manufactureInfo.stream().map(WebElement::getText).filter(x -> !x.isBlank()).findFirst().get():"";
     }
 
     public Boolean findSuppliers(List<String> suppliers){
