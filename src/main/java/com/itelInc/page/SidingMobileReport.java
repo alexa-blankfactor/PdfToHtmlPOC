@@ -9,6 +9,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,8 +50,8 @@ public class SidingMobileReport {
     private WebElement lossDate;
     @FindBy(xpath = "//span[@title='MATCHING APP RESULT']//preceding::span[1]")
     private WebElement matchingAppResult;
-    @FindBy(xpath = "//span[@title='MATCH 1']//following-sibling::span[4]")
-    private WebElement match1;
+    @FindBy(xpath = "//span[@title='MATCH 1']//following-sibling::span")
+    private List<WebElement> match1;
     @FindBy(xpath = "//span[@title='Profile']//following-sibling::span")
     private WebElement profile;
     @FindBy(xpath = "//span[@title='Material']//following-sibling::span")
@@ -95,71 +96,71 @@ public class SidingMobileReport {
     }
 
     public String getCustomerId(){
-        return FindElement.isPresent(customerId)?customerId.getText():"";
+        return FindElement.isPresent(customerId)?customerId.getText().trim():"";
     }
 
     public String getAdjuster(){
-        return FindElement.isPresent(adjuster)?adjuster.getText():"";
+        return FindElement.isPresent(adjuster)?adjuster.getText().trim():"";
     }
 
     public String getAdditional(){
-        return FindElement.isPresent(additional)?additional.getText():"";
+        return FindElement.isPresent(additional)?additional.getText().trim():"";
     }
 
     public String getContact(){
-        return FindElement.isPresent(contact)?contact.getText():"";
+        return FindElement.isPresent(contact)?contact.getText().trim():"";
     }
 
     public String getEmail(){
-        return FindElement.isPresent(email)?email.getText():"";
+        return FindElement.isPresent(email)?email.getText().trim():"";
     }
 
     public String getFax(){
-        return FindElement.isPresent(fax)?fax.getText():"";
+        return FindElement.isPresent(fax)?fax.getText().trim():"";
     }
 
     public String getDateInvoiced(){
-        return FindElement.isPresent(dateInvoiced)?dateInvoiced.getText():"";
+        return FindElement.isPresent(dateInvoiced)?dateInvoiced.getText().trim():"";
     }
     public String getDateReceived(){
-        return FindElement.isPresent(dateReceived)?dateReceived.getText():"";
+        return FindElement.isPresent(dateReceived)?dateReceived.getText().trim():"";
     }
-    public String getDateInsuredName(){
-        return FindElement.isPresent(insuredName)?insuredName.getText():"";
+    public String getInsuredName(){
+        return FindElement.isPresent(insuredName)?insuredName.getText().trim():"";
     }
     public String getClaimNumber(){
-        return FindElement.isPresent(claimNumber)?claimNumber.getText():"";
+        return FindElement.isPresent(claimNumber)?claimNumber.getText().trim():"";
     }
     public String getLossLocation(){
-        return FindElement.isPresent(lossLocation)?lossLocation.getText():"";
+        return FindElement.isPresent(lossLocation)?lossLocation.getAttribute("title").trim():"";
     }
     public String getAreaDamage(){
-        return FindElement.isPresent(areaDamaged)?areaDamaged.getText():"";
+        return FindElement.isPresent(areaDamaged)?areaDamaged.getText().trim():"";
     }
 
     public String getLossDate(){
-        return FindElement.isPresent(lossDate)?lossDate.getText():"";
+        return FindElement.isPresent(lossDate)?lossDate.getText().trim():"";
     }
     public String getMatchingAppResult(){
-        return FindElement.isPresent(matchingAppResult)?matchingAppResult.getText():"";
+        return FindElement.isPresent(matchingAppResult)?matchingAppResult.getText().replace(";",",").trim():"";
     }
     public String getMatch1(){
-        return FindElement.isPresent(match1)?match1.getText():"";
+        return FindElement.isPresent(match1)?match1.stream().map(WebElement::getText).collect(Collectors.joining()).trim() :"";
     }
     public String getProfile(){
-        return FindElement.isPresent(profile)?profile.getText():"";
+        return FindElement.isPresent(profile)?profile.getText().trim():"";
     }
     public String getMaterial(){
-        return FindElement.isPresent(material)?material.getText():"";
+        return FindElement.isPresent(material)?material.getText().trim():"";
     }
     public String getProjection(){
-        return FindElement.isPresent(projection)?projection.getText():"";
+        return FindElement.isPresent(projection)?projection.getText().replace('"',' ').trim():"";
     }
     public String getThickness(){
-        return FindElement.isPresent(thickness)?thickness.getText():"";
+        return FindElement.isPresent(thickness)?thickness.getText().replace('"',' ').trim():"";
     }
     public String getBestColorMatch(){
-        return  FindElement.isPresent(bestColorMatch)? bestColorMatch.stream().map(WebElement::getText).filter(x -> !x.isBlank()).findFirst().get():"";
+        return  FindElement.isPresent(bestColorMatch)? bestColorMatch.stream().map(WebElement::getText).filter(x -> !x.isBlank()).findFirst().get().trim():"";
 
     }
     public String getOtherCandidateColorMatches(){
@@ -172,14 +173,14 @@ public class SidingMobileReport {
         }
     }
     public String getManufacturerInfo(){
-        return FindElement.isPresent(manufactureInfo)? manufactureInfo.stream().map(WebElement::getText).filter(x -> !x.isBlank()).findFirst().get():"";
+        return FindElement.isPresent(manufactureInfo)? manufactureInfo.stream().map(WebElement::getText).filter(x -> !x.isBlank()).findFirst().get().trim():"";
     }
 
     public Boolean findSuppliers(List<String> suppliers){
         String prefixXpath= "//*[";
         String baseXpath = "contains(@title,'?')";
         String endXpath ="]";
-        List<WebElement> suppliersElements= null;
+        List<WebElement> suppliersElements= new ArrayList<>();
         if (suppliers.size() > 1){
             searchSuppliers=searchSuppliers.concat(prefixXpath);
             searchSuppliers=searchSuppliers.concat(baseXpath.replace("?",suppliers.get(0)));
@@ -199,77 +200,81 @@ public class SidingMobileReport {
     }
 
     public Boolean isSimilarMatchAvailable(){
+        boolean isSimilarMatchAvailable= false;
         if (matchingAppResult.getText().contains(MATCHING_APP_RESULT_AVAILABLE)){
             driver.switchTo().frame(driver.findElements(By.tagName("object")).get(0));
             List<WebElement>elements=driver.findElements(By.xpath(htmlImages));
             if(FindElement.isPresent(elements)){
                 List<String> imagesName= elements.stream().map(image -> image.getAttribute("xlink:href")).distinct().toList();
-                driver.switchTo().defaultContent();
-                return imagesName.stream()
+                isSimilarMatchAvailable= imagesName.stream()
                         .map(image -> new CompareImage()
                                 .compare(FilePath.FILE_PATH_TEST_IMAGE.getFilePath() + "check.png", FilePath.FILE_PATH_SIDING_MOBILE_HTML_RESOURCES.getFilePath() + image))
                         .filter(result -> !result).toList().size() >= 1;
 
+                driver.switchTo().defaultContent();
+                return isSimilarMatchAvailable;
 
             }
         }
         driver.switchTo().defaultContent();
-        return false;
+        return isSimilarMatchAvailable;
     }
 
     public Boolean isSimilarMatchUnavailable(){
+        boolean isSimilarMatchUnavailable= false;
         if (matchingAppResult.getText().contains(MATCHING_APP_RESULT_AVAILABLE)){
             driver.switchTo().frame(driver.findElements(By.tagName("object")).get(0));
             List<WebElement>elements=driver.findElements(By.xpath(htmlImages));
             if(FindElement.isPresent(elements)){
                 List<String> imagesName= elements.stream().map(image -> image.getAttribute("xlink:href")).distinct().toList();
-                driver.switchTo().defaultContent();
-                return imagesName.stream()
+                isSimilarMatchUnavailable= imagesName.stream()
                         .map(image -> new CompareImage()
                                 .compare(FilePath.FILE_PATH_TEST_IMAGE.getFilePath() + "uncheck.png", FilePath.FILE_PATH_SIDING_MOBILE_HTML_RESOURCES.getFilePath() + image))
                         .filter(result -> !result).toList().size() >= 1;
-
+                driver.switchTo().defaultContent();
+                return isSimilarMatchUnavailable;
 
             }
         }
         driver.switchTo().defaultContent();
-        return false;
+        return isSimilarMatchUnavailable;
     }
 
     public Boolean areTheImagesIncludedInReport(String expectedImage){
+        boolean areTheImagesIncludedInReport= false;
         driver.switchTo().frame(driver.findElements(By.tagName("object")).get(1));
         List<WebElement>elements=driver.findElements(By.xpath(htmlImages));
         if(FindElement.isPresent(elements)){
             List<String> imagesName= elements.stream().map(image -> image.getAttribute("xlink:href")).distinct().toList();
-            driver.switchTo().defaultContent();
-          return imagesName.stream()
+            areTheImagesIncludedInReport= imagesName.stream()
                     .map(image -> new CompareImage()
                             .compare(FilePath.FILE_PATH_TEST_IMAGE.getFilePath() + expectedImage, FilePath.FILE_PATH_SIDING_MOBILE_HTML_RESOURCES.getFilePath() + image))
                     .filter(result -> !result).toList().size() >= 1;
 
-
+            driver.switchTo().defaultContent();
+            return areTheImagesIncludedInReport;
         }
         driver.switchTo().defaultContent();
-        return false;
+        return areTheImagesIncludedInReport;
     }
 
     public String getMatchingAppResultComments(){
        return matchingAppResultComments.stream().map(result->result.getText()).takeWhile(text->
-           !text.contains("MATCHING PRODUCTS")).collect(Collectors.joining()).trim();
+           !text.contains("MATCHING PRODUCTS")).collect(Collectors.joining()).trim().replace(";",",");
 
     }
     public String getMatchingProductComments(){
         return matchingProductsComments.stream().map(result->result.getText()).takeWhile(text->
-                !text.contains("See PERSONALIZED")).collect(Collectors.joining()).trim();
+                !text.contains("See PERSONALIZED")).collect(Collectors.joining()).trim().replace(";",",");
     }
     public String getMatching1HelpfulComments(){
         return match1HelpfulComments.stream().map(result->result.getText()).takeWhile(text->
-                !text.contains("Matched with the ITEL Matching App")).collect(Collectors.joining()).trim();
+                !text.contains("Matched with the ITEL Matching App")).collect(Collectors.joining()).trim().replace(";",",");
     }
 
     public String getAdditionalComments(){
         return additionalComments.stream().map(result->result.getText()).takeWhile(text->
-                !text.contains("Print Date")).collect(Collectors.joining()).trim();
+                !text.contains("Print Date")).collect(Collectors.joining()).trim().replace(";",",");
 
     }
 

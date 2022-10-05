@@ -10,6 +10,7 @@ import org.openqa.selenium.WebDriver;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,7 +24,7 @@ public class ReportPdfTest  extends Driver{
     public void testReportPdf(){
         String pdfReportName = "Asphalt_Shingle_Mobile";
         ConvertPDFtoHTML convertPDFtoHTML = new ConvertPDFtoHTML();
-        convertPDFtoHTML.convert(pdfReportName);
+        convertPDFtoHTML.convert(pdfReportName,true);
         driver = getDriver();
         driver.get("file://"+new File(FilePath.FILE_PATH_HTML_REPORT.getFilePath()+pdfReportName+".html").getAbsoluteFile());
         SidingMobileReport sidingMobileReportPage= new SidingMobileReport(driver);
@@ -34,7 +35,7 @@ public class ReportPdfTest  extends Driver{
     public void successful_ASP_mobile_report_generation(){
         String pdfReportName = "Asphalt_Shingle_Mobile";
         ConvertPDFtoHTML convertPDFtoHTML = new ConvertPDFtoHTML();
-        convertPDFtoHTML.convert(pdfReportName);
+        convertPDFtoHTML.convert(pdfReportName,true);
         driver = getDriver();
         driver.get("file://"+new File(FilePath.FILE_PATH_HTML_REPORT.getFilePath()+pdfReportName+".html").getAbsoluteFile());
         AsphaltShingleMobileReport asphaltShingleMobileReport= new AsphaltShingleMobileReport(driver);
@@ -69,9 +70,48 @@ public class ReportPdfTest  extends Driver{
             assertThat(asphaltShingleMobileReport.getAdditionalComments()).as("additional comments").isEqualTo(valueExpected.get("additionalComments"));
 
         });
+    }
 
-
-
+    @Test
+    public void successful_siding_mobile_report_generation(){
+        String pdfReportName = "Siding_Mobile";
+        ConvertPDFtoHTML convertPDFtoHTML = new ConvertPDFtoHTML();
+        convertPDFtoHTML.convert(pdfReportName,false);
+        driver = getDriver();
+        driver.get("file://"+new File(FilePath.FILE_PATH_HTML_REPORT.getFilePath()+pdfReportName+".html").getAbsoluteFile());
+        SidingMobileReport sidingMobileReportPage= new SidingMobileReport(driver);
+        List<Map<String,String>> sidingMobileReportValuesExpected=CSVContent.getValue(FilePath.FILE_PATH_DATA_TEST.getFilePath() + pdfReportName+ "_data_expected.csv");
+        assertThat(sidingMobileReportPage.getCustomer().trim()).as("customer").isEqualTo(sidingMobileReportValuesExpected.get(0).get("customer"));
+        assertThat(sidingMobileReportPage.getCustomerId()).as("customer Id").isEqualTo(sidingMobileReportValuesExpected.get(0).get("customerId"));
+        assertThat(sidingMobileReportPage.getAdjuster()).as("adjuster").isEqualTo(sidingMobileReportValuesExpected.get(0).get("adjuster"));
+        assertThat(sidingMobileReportPage.getControlNumber()).as("control Number").isEqualTo(sidingMobileReportValuesExpected.get(0).get("controlNumber"));
+        assertThat(sidingMobileReportPage.getDateReceived()).as("date Received").isEqualTo(sidingMobileReportValuesExpected.get(0).get("dateReceived"));
+        assertThat(sidingMobileReportPage.getDateInvoiced()).as("date Invoiced").isEqualTo(sidingMobileReportValuesExpected.get(0).get("dateInvoiced"));
+        assertThat(sidingMobileReportPage.getAdditional()).as("additional").isEqualTo(sidingMobileReportValuesExpected.get(0).get("additional"));
+        assertThat(sidingMobileReportPage.getContact()).as("contact").isEqualTo(sidingMobileReportValuesExpected.get(0).get("contact"));
+        assertThat(sidingMobileReportPage.getEmail()).as("email").isEqualTo(sidingMobileReportValuesExpected.get(0).get("email"));
+        assertThat(sidingMobileReportPage.getFax()).as("fax").isEqualTo(sidingMobileReportValuesExpected.get(0).get("fax"));
+        assertThat(sidingMobileReportPage.getClaimNumber()).as("claimNumber").isEqualTo(sidingMobileReportValuesExpected.get(0).get("claimNumber"));
+        assertThat(sidingMobileReportPage.getInsuredName()).as("insuredName").isEqualTo(sidingMobileReportValuesExpected.get(0).get("insuredName"));
+        assertThat(sidingMobileReportPage.getLossLocation()).as("lossLocation").isEqualTo(sidingMobileReportValuesExpected.get(0).get("lossLocation"));
+        assertThat(sidingMobileReportPage.getLossDate()).as("lossDate").isEqualTo(sidingMobileReportValuesExpected.get(0).get("lossDate"));
+        assertThat(sidingMobileReportPage.getAreaDamage()).as("areaDamaged").isEqualTo(sidingMobileReportValuesExpected.get(0).get("areaDamaged"));
+        assertThat(sidingMobileReportPage.getMatchingAppResult()).as("matchingAppResult").isEqualTo(sidingMobileReportValuesExpected.get(0).get("matchingAppResult"));
+        assertThat(sidingMobileReportPage.isSimilarMatchAvailable()).as("matching App Result is available").isEqualTo(true);
+        assertThat(sidingMobileReportPage.getMatch1()).as("Match 1").isEqualTo(sidingMobileReportValuesExpected.get(0).get("match1"));
+        assertThat(sidingMobileReportPage.getProfile()).as("profile").isEqualTo(sidingMobileReportValuesExpected.get(0).get("profile"));
+        assertThat(sidingMobileReportPage.getMaterial()).as("material").isEqualTo(sidingMobileReportValuesExpected.get(0).get("material"));
+        assertThat(sidingMobileReportPage.getProjection()).as("projection").isEqualTo(sidingMobileReportValuesExpected.get(0).get("projection"));
+        assertThat(sidingMobileReportPage.getThickness()).as("thickness").isEqualTo(sidingMobileReportValuesExpected.get(0).get("thickness"));
+        assertThat(sidingMobileReportPage.getBestColorMatch()).as("best Color Match").isEqualTo(sidingMobileReportValuesExpected.get(0).get("bestColorMatch"));
+        assertThat(sidingMobileReportPage.getOtherCandidateColorMatches()).as("other Candidate Color Matches").isEqualTo(sidingMobileReportValuesExpected.get(0).get("otherCandidateColorMatches"));
+        assertThat(sidingMobileReportPage.getManufacturerInfo()).as("manufactureInfo").isEqualTo(sidingMobileReportValuesExpected.get(0).get("manufactureInfo"));
+        assertThat(sidingMobileReportPage.getMatchingAppResultComments()).as("matching App Result Comments").isEqualTo(sidingMobileReportValuesExpected.get(0).get("matchingAppResultComments"));
+        assertThat(sidingMobileReportPage.getMatchingProductComments()).as("matching Products Comments").isEqualTo(sidingMobileReportValuesExpected.get(0).get("matchingProductsComments"));
+        assertThat(sidingMobileReportPage.getMatching1HelpfulComments()).as("match1 Helpful Comments").isEqualTo(sidingMobileReportValuesExpected.get(0).get("match1HelpfulComments"));
+        assertThat(sidingMobileReportPage.getAdditionalComments()).as("additional Comments").isEqualTo(sidingMobileReportValuesExpected.get(0).get("additionalComments"));
+        assertThat(sidingMobileReportPage.findSuppliers(Arrays.stream(sidingMobileReportValuesExpected.get(0).get("suppliers").split(",")).toList())).as("suppliers").isEqualTo(true);
+        assertThat(sidingMobileReportPage.areTheImagesIncludedInReport("sidingMobile/noProductImageAvailable.png")).as("images").isEqualTo(true);
 
     }
 

@@ -15,7 +15,7 @@ import java.util.Locale;
 
 public class ConvertPDFtoHTML {
 
-    public void convert(String fileName){
+    public void convert(String fileName,boolean setUseZOrder){
         Locale.setDefault(new Locale(("en-us")));
         Document pdfDocument = new Document(FilePath.FILE_PATH_PDF_REPORT.getFilePath() +fileName+".pdf");
         HtmlSaveOptions options = new HtmlSaveOptions();
@@ -23,7 +23,7 @@ public class ConvertPDFtoHTML {
         options.setSplitIntoPages(false);
         options.SpecialFolderForAllImages = FilePath.FILE_PATH_HTML_REPORT.getFilePath()+ fileName +"_images";
         options.setDocumentType(SaveFormat.Html);
-        options.setUseZOrder(true);
+        options.setUseZOrder(setUseZOrder);
         pdfDocument.save(FilePath.FILE_PATH_HTML_REPORT.getFilePath()+ fileName+".html", options);
         addTittleAttribute(FilePath.FILE_PATH_HTML_REPORT.getFilePath()+ fileName+".html");
     }
