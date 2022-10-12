@@ -1,6 +1,9 @@
 package com.itelInc.page;
 
+import com.itelInc.constants.FilePath;
+import com.itelInc.utils.CompareImage;
 import com.itelInc.utils.FindElement;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -9,40 +12,40 @@ import org.openqa.selenium.support.PageFactory;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AsphaltShingleMobileReport {
+public class AsphaltShingle30MReport {
 
     private WebDriver driver;
-    @FindBy(xpath = "//span[@title='Customer']//following-sibling::span")
-    private WebElement customer;
-    @FindBy(xpath = "//span[@title='Cust ID']//following::span[1]")
+    @FindBy(xpath = "//span[@title='Customer']//following-sibling::span//following::span[4]|//span[@title='Customer']//following-sibling::span")
+    private List<WebElement> customer;
+    @FindBy(xpath = "//span[@title='Cust ID']//following::span[3]")
     private WebElement customerId;
-    @FindBy(xpath = "//span[@title='Adjuster']//following::span[1]")
+    @FindBy(xpath = "//span[@title='Adjuster']//following::span[3]")
     private WebElement adjuster;
-    @FindBy(xpath="//span[@title='Control #']//following::span[3]")
+    @FindBy(xpath="//span[@title='Control #']//following::span[1]")
     private WebElement controlNumber;
     @FindBy(xpath = "//span[@title='Date Received']//following::span[3]")
     private WebElement dateReceived;
-    @FindBy(xpath = "//span[@title='Date Invoiced']//following::span[3]")
+    @FindBy(xpath = "//span[@title='Date Invoiced']//following::span[2]")
     private WebElement dateInvoiced;
     @FindBy(xpath = "//span[@title='Additional']//following-sibling::span")
     private WebElement additional;
-    @FindBy(xpath = "//span[@title='Vendor Job#']//following-sibling::span")
+    @FindBy(xpath = "//span[@title='Vendor Job#']//following-sibling::span[2]")
     private WebElement vendorJobNumber;
     @FindBy(xpath = "//span[@title='Contact']//following::span")
     private List<WebElement> contact;
-    @FindBy(xpath = "(//span[@title='Comments'])[1]//following::span[1]")
+    @FindBy(xpath = "(//span[@title='Comments'])[1]//following::span[3]")
     private List<WebElement> customerInformationComments;
     @FindBy(xpath = "//span[@title='Claim #']//following::span[1]")
     private WebElement claimNumber;
-    @FindBy(xpath = "//span[@title='Insured Name']//preceding::span[5]")
+    @FindBy(xpath = "//span[@title='Insured Name']//following::span[6]")
     private WebElement insuredName;
-    @FindBy(xpath = "//span[@title='City,State,Zip']//following::span[2]")
+    @FindBy(xpath = "//span[@title='City,State,Zip']//following::span[3]")
     private WebElement cityStateZip;
-    @FindBy(xpath = "//span[@title='Loss Date']//following::span[2]")
+    @FindBy(xpath = "//span[@title='Loss Date']//following::span[3]")
     private WebElement lossDate;
-    @FindBy(xpath = "//span[@title='Area Damaged']//following::span[2]")
+    @FindBy(xpath = "//span[@title='Area Damaged']//following::span[1]")
     private WebElement areaDamaged;
-    @FindBy(xpath = "(//span[@title='Comments'])[2]//following::span[2]")
+    @FindBy(xpath = "(//span[@title='Comments'])[2]//following::span[2]//following::span")
     private List<WebElement> insuredInformationComments;
     @FindBy(xpath = "//span[@title='ITEL BENCHMARK']//following::span")
     private List<WebElement> itelBenchmarkItems;
@@ -68,14 +71,15 @@ public class AsphaltShingleMobileReport {
     private List<WebElement> closestAPSComments;
     @FindBy(xpath = "//span[@title='ADDITIONAL COMMENTS']//following::span")
     private List<WebElement> additionalComments;
+    private final  String htmlImages ="//*[name()='svg']//*[name()='g']//*[name()='image']";
 
-    public AsphaltShingleMobileReport(WebDriver driver) {
+    public AsphaltShingle30MReport(WebDriver driver) {
         this.driver=driver;
         PageFactory.initElements(driver,this);
     }
 
     public String getCustomer(){
-        return FindElement.isPresent(customer)?customer.getText().trim():"";
+        return FindElement.isPresent(customer)?customer.stream().map(element -> element.getText().trim()).collect(Collectors.joining()):"";
     }
 
     public String getCustomerId(){
@@ -103,13 +107,13 @@ public class AsphaltShingleMobileReport {
         return FindElement.isPresent(vendorJobNumber)?vendorJobNumber.getText().trim():"";
     }
     public String getContact(){
-        return FindElement.isPresent(contact)?contact.stream().map(WebElement::getText).takeWhile(text->
-                !text.contains("Comments")).collect(Collectors.joining()).trim():"";
+        return contact.stream().map(WebElement::getText).takeWhile(text->
+                !text.contains("INSURED")).collect(Collectors.joining()).trim();
     }
 
     public String getCustomerInformationComments(){
         return FindElement.isPresent(customerInformationComments)?customerInformationComments.stream().map(WebElement::getText).takeWhile(text->
-                !text.contains("INSURED INFORMA")).collect(Collectors.joining()).trim():"";
+                !text.contains("Date Received:")).collect(Collectors.joining()).trim():"";
     }
 
     public String getClaimNumber(){
@@ -134,7 +138,7 @@ public class AsphaltShingleMobileReport {
 
     public String getInsuredInformationComments(){
         return FindElement.isPresent(insuredInformationComments)?insuredInformationComments.stream().map(WebElement::getText).takeWhile(text->
-                !text.contains("ITEL BENCHMARK")).collect(Collectors.joining()).trim():"";
+                !text.contains("Area Damaged:")).collect(Collectors.joining()).trim():"";
     }
 
     public List<String> getItelBenchmarkItems(){
@@ -182,7 +186,24 @@ public class AsphaltShingleMobileReport {
     }
 
     public String getAdditionalComments(){
-        return FindElement.isPresent(additionalComments)?additionalComments.stream().map(WebElement::getText).takeWhile(text->
-                !text.contains("Evaluation Only.")).collect(Collectors.joining()).trim():"";
+        return FindElement.isPresent(additionalComments)?additionalComments.stream().map(element -> element.getText().replace('"',' ').trim()).takeWhile(text->
+                !text.contains("Need help sourcing")).collect(Collectors.joining()):"";
+    }
+    public Boolean areTheImagesIncludedInReport(String expectedImage){
+        boolean areTheImagesIncludedInReport= false;
+        driver.switchTo().frame(driver.findElements(By.tagName("object")).get(0));
+        List<WebElement>elements=driver.findElements(By.xpath(htmlImages));
+        if(FindElement.isPresent(elements)){
+            List<String> imagesName= elements.stream().map(image -> image.getAttribute("xlink:href")).distinct().toList();
+            areTheImagesIncludedInReport= imagesName.stream()
+                    .map(image -> new CompareImage()
+                            .compare(FilePath.FILE_PATH_TEST_IMAGE.getFilePath() + expectedImage, FilePath.FILE_PATH_ASP30M_HTML_RESOURCES.getFilePath() + image))
+                    .filter(result -> !result).toList().size() >= 1;
+
+            driver.switchTo().defaultContent();
+            return areTheImagesIncludedInReport;
+        }
+        driver.switchTo().defaultContent();
+        return areTheImagesIncludedInReport;
     }
 }
